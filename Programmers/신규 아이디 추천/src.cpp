@@ -88,13 +88,6 @@ string solution(string new_id) {
         }
     }
 
-    //²ı
     answer = new_id;
     return answer;
-}
-
-int main() {
-    string t;
-    cin >> t;
-    cout << solution(t);
 }
