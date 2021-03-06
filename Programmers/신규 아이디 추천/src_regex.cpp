@@ -8,17 +8,17 @@ using namespace std;
 
 string solution(string new_id) {
     string answer = "";
-    //1 ´Ü°è
+    //1ë‹¨ê³„
     transform(new_id.begin(), new_id.end(), new_id.begin(), ::tolower);
 
-    //2 ´Ü°è
+    //2ë‹¨ê³„
     new_id = regex_replace(new_id, regex("\[^(0-9a-z-_.)]"), "");
     new_id = regex_replace(new_id, regex("\[\(\)]"), "");
 
-    //3 ´Ü°è
+    //3ë‹¨ê³„
     new_id = regex_replace(new_id, regex("\\.{2,}"), ".");
 
-    //4 ´Ü°è
+    //4ë‹¨ê³„
     if (new_id[0] == '.') {
         new_id = new_id.substr(1);
     }
@@ -26,12 +26,12 @@ string solution(string new_id) {
         new_id.resize(new_id.size() - 1);
     }
 
-    //5 ´Ü°è
+    //5ë‹¨ê³„
     if (new_id.size() == 0) {
         new_id = "a";
     }
 
-    //6 ´Ü°è
+    //6ë‹¨ê³„
     if (new_id.size() >= 16) {
         new_id.resize(15);
         if (new_id[new_id.size() - 1] == '.') {
@@ -39,7 +39,7 @@ string solution(string new_id) {
         }
     }
 
-    //7 ´Ü°è
+    //7ë‹¨ê³„
     if (new_id.size() <= 2) {
         char tmp = new_id.back();
         for (int i = new_id.size(); i < 3; i++) {
