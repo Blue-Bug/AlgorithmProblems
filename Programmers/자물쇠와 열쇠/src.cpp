@@ -6,21 +6,8 @@ using namespace std;
 
 string hole_str = "";
 
-bool compare(pair<int, int> a, pair<int, int> b) {
-	if (a.first == b.first) {
-		return a.second < b.second;
-	}
-	return a.first < b.first;
-}
-bool compare2(pair<int, int> a, pair<int, int> b) {
-	if (a.second == b.second) {
-		return a.first < b.first;
-	}
-	return a.second < b.second;
-}
-
 void rotateKey(vector<vector<int>> &key) {
-	//회전시키기
+	//key를 회전시키기
 	vector<int> init_tmp(key.size());
 	vector<vector<int>> tmp;
 	for (int t = 0; t < key.size(); t++) {
@@ -38,16 +25,19 @@ void rotateKey(vector<vector<int>> &key) {
 	}
 	key = tmp;
 }
+
 bool findHoles(vector<vector<int>> &key, int row,int col,int rowSize, int colSize) {
 	int init_row = (row - rowSize) + 1;
 	int init_col = (col - colSize) + 1;
 	string cmpStr = "";
 
+	//key에서 rowSize, colSize 크기만큼 잘라내며 string에 추가
 	for (int i = init_row; i <= row; i++) {
 		for (int j = init_col; j <= col; j++) {
 			cmpStr += (key[i][j]+48);
 		}
 	}
+	//lock에서 같은 크기로 추출하고 홈 파인 부분을 반전시킨 문자열과 비교
 	if (cmpStr == hole_str) {
 		return true;
 	}
@@ -57,58 +47,54 @@ bool findHoles(vector<vector<int>> &key, int row,int col,int rowSize, int colSiz
 bool solution(vector<vector<int>> key, vector<vector<int>> lock) {
 	int lockSize = lock.size();
 	int keySize = key.size();
-	int cutSize = 0;
-	//LOCK에서 자르기
-	//홈파인부분=> 비교할 부분
+
+	int rowfirst = -1;
+	int rowlast = 0;
+	int colfirst = lockSize;
+	int collast = 0;
+
+	//LOCK에서 홈 파인 부분의 위치를 추출
+	//홈파인부분 => 비교할 부분
 	vector<pair<int, int>> holes_pos;
 	for (int i = 0; i < lockSize; i++) {
 		for (int j = 0; j < lockSize; j++) {
 			if (lock[i][j] == 0) {
 				holes_pos.push_back({ i,j });
+				if (rowfirst == -1) {
+					rowfirst = i;
+				}
+				if (colfirst >= j) {
+					colfirst = j;
+				}
+				if (collast <= j) {
+					collast = j;
+				}
+				rowlast = i;
 			}
 		}
 	}
+
 	//segmentfault로 봐선 벡터 접근시 문제 발생 -> 높은 확률로 사이즈가 0일때 접근해서 문제일것
 	if (holes_pos.size() == 0) {
-		return false;
+		return true;
 	}
 
-	//자른 부분 0,0으로 올리기
-	if (holes_pos.size() > 1) {
-		sort(holes_pos.begin(), holes_pos.end(), compare);
-		for (int i = 1; i < holes_pos.size(); i++) {
-			holes_pos[i].first -= holes_pos.front().first;
+	//홈 파인 부분이 있는 곳을 전부 포함하도록 잘라내며 비교하기 위해 Size 초기화
+	int rowSize = (rowlast - rowfirst) + 1;
+	int colSize = (collast - colfirst) + 1;
+
+	//key와 일치하도록 비교할 것이므로 값을 반대로 해서 string을 구성
+	for (int i = rowfirst; i <= rowlast; i++) {
+		for (int j = colfirst; j <= collast; j++) {
+			if (lock[i][j] == 1) {
+				hole_str += (lock[i][j] + 47);
+			}
+			else{
+				hole_str += (lock[i][j] + 49);
+			}
 		}
 	}
-	holes_pos.front().first = 0;
-	int rowSize = holes_pos.back().first + 1;
-	//row가 작은 순서대로 정렬 후 맨 앞의 row값 만큼 전부 빼줌
-
-	if (holes_pos.size() > 1) {
-		sort(holes_pos.begin(), holes_pos.end(), compare2);
-		for (int i = 1; i < holes_pos.size(); i++) {
-			holes_pos[i].second -= holes_pos.front().second;
-		}
-	}
-	holes_pos.front().second = 0;
-	int colSize = holes_pos.back().second + 1;
-	//col이 작은 순서대로 정렬 후 맨앞의 col값 만큼 전부 빼줌
-	//LOCK의 홈파인 부분을 KEY와 비교하기위해 돌기로 재구성
-
-	vector<vector<int>> hole;
-	for (int i = 0; i < rowSize; i++) {
-		vector<int> tmp(colSize, 0);
-		hole.push_back(tmp);
-	}
-	for (auto pos : holes_pos) {
-		hole[pos.first][pos.second] = 1;
-	}
-	for (int i = 0; i < rowSize; i++) {
-		for (int j = 0; j < colSize; j++) {
-			hole_str += (hole[i][j]+48);
-		}
-	}
-
+	
 	//회전하며 잘라가며 비교
 	int remainCnt = 4;
 	while (remainCnt-- > 0) {
@@ -124,9 +110,4 @@ bool solution(vector<vector<int>> key, vector<vector<int>> lock) {
 		rotateKey(key);
 	}
 	return false;
-}
-
-int main() {
-	solution({ {1,0,0},{0,1,0},{1,0,1} }, { {1,1,1},{0,1,0},{1,0,1} });
-	//solution({ {0,0,0},{1,0,1},{0,1,0} }, { {1,1,1},{0,1,0},{1,0,1} });
 }

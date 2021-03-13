@@ -62,9 +62,11 @@ string processChords() {
 	//C, C#, D, D#, E, F, F#, G, G#, A, A#, B 
 	//#같은게 있으니 전부 봐야됨
 	while (countTime-- > 0) {
+		//idx가 마지막 위치를 넘어가면 맨 앞으로 초기화
 		if (idx >= infoMap[3].size()) {
 			idx = 0;
 		}
+		//코드 뒤에 #이 있으면 추가하고 idx 증가
 		if (idx != (infoMap[3].size() - 1) && (infoMap[3][idx] == 'C' || infoMap[3][idx] == 'D'
 			|| infoMap[3][idx] == 'F' || infoMap[3][idx] == 'G' || infoMap[3][idx] == 'A')
 			&& infoMap[3][idx + 1] == '#') {
@@ -86,6 +88,7 @@ string compareChords(string m, string chords) {
 	string answer = "";
 	int melodyCnt = 0;
 	int chordsCnt = 0;
+	//기억한 멜로디의 코드개수를 세어서 저장
 	for (int i = 0; i < m.size(); i++) {
 		if (i != (m.size() - 1) && (m[i] == 'C' || m[i] == 'D'
 			|| m[i] == 'F' || m[i] == 'G' || m[i] == 'A')
@@ -94,12 +97,14 @@ string compareChords(string m, string chords) {
 		}
 		melodyCnt++;
 	}
+	//기억한 멜로디와 재생된 노래의 코드길이가 같다면 바로 비교
 	if (m.size() == chords.size() && m == chords) {
 		answer = infoMap[2];
 		return answer;
 	}
 	else if (m.size() < chords.size()) {
 		for (int i = 0; i < chords.size(); i++) {
+			//재생된 노래의 코드를 기억한 멜로디 코드개수와 같을때까지 잘라냄
 			if (i != (chords.size() - 1) && (chords[i] == 'C' || chords[i] == 'D' ||
 				chords[i] == 'F' || chords[i] == 'G' || chords[i] == 'A')
 				&& chords[i + 1] == '#') {
@@ -113,12 +118,14 @@ string compareChords(string m, string chords) {
 			//C#BBC#
 			//C#BBB
 			//사이즈로 비교하면 #때문에 조건문을 지나쳐버림
+			//잘라낸 코드의 개수가 기억한 멜로디 코드개수와 같다면 비교한다.
 			if (++chordsCnt == melodyCnt) {
 				if (cutMelody == m) {
 					answer = infoMap[2];
 					return answer;
 				}
 				else {
+					//같지 않다면 앞에서 코드하나를 잘라냄
 					if ((cutMelody[0] == 'C' || cutMelody[0] == 'D' || cutMelody[0] == 'F'
 						|| cutMelody[0] == 'G' || cutMelody[0] == 'A')
 						&& cutMelody[1] == '#') {
