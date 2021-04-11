@@ -4,14 +4,19 @@
 #include <unordered_map>
 using namespace std;
 
+//로마 문자의 정수 값이 저장될 맵
 unordered_map<string, int> rome_value;
 
+//I,X,C,M이 연속으로 3번 쓰였는지 확인하는 플래그 벡터
 vector<int> IXCMFlag(4, 0);
 
+//로마 문자를 정수로 변환하는 함수
 int getRomeValue(string rome1) {
 	int rome1_value = 0;
 	string tmp = "";
+
 	for (int i = 0; i < rome1.size(); i++) {
+		//유의해야 하는 경우의 조건을 보면서 리턴 값을 증가
 		if (i < rome1.size() - 1) {
 			if (rome1[i] == 'I') {
 				if (rome1[i + 1] == 'V') {
@@ -56,6 +61,7 @@ int getRomeValue(string rome1) {
 	return rome1_value;
 }
 
+//I,X,C,M 플래그를 초기화 해주는 함수
 void initIXCMFlag(int except){
 	for (int i =0; i<4; i++){
 		if (except == i) {
@@ -66,6 +72,7 @@ void initIXCMFlag(int except){
 }
 vector<string> solution(string rome1,string rome2) {
 	vector<string> answer;
+	//rome_value 맵에 각 로마 문자 값을 넣어준다.
 	rome_value["I"] = 1;
 	rome_value["V"] = 5;
 	rome_value["X"] = 10;
@@ -80,6 +87,7 @@ vector<string> solution(string rome1,string rome2) {
 	rome_value["IX"] = 9;
 	rome_value["IV"] = 4;
 
+	//전달 받은 rome1,rome2 문자를 정수로 변환하고 더해준다.
 	int rome1_value = getRomeValue(rome1);
 	int rome2_value = getRomeValue(rome2);
 	int rome_sum = rome1_value + rome2_value;
@@ -88,6 +96,7 @@ vector<string> solution(string rome1,string rome2) {
 	
 	string rome_sum_str = "";
 	string tmp;
+	//한번만 쓸수 있는 문자들의 플래그
 	bool V_FLAG = false;
 	bool L_FLAG = false;
 	bool D_FLAG = false;
@@ -98,6 +107,7 @@ vector<string> solution(string rome1,string rome2) {
 	bool IV_FLAG = false;
 	bool IX_FLAG = false;
 	while (rome_sum > 0) {
+		//위에서 구한 rome_sum의 값을 0이 될때까지 줄여가며 조건 체크
 		if (rome_sum >= 1000 && IXCMFlag[3] < 3) {
 			tmp = 'M';
 			IXCMFlag[3]++;
