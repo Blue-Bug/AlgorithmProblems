@@ -45,6 +45,7 @@ void binary_search() {
 		else {
 			last = mid - 1;
 		}
+
 	}
 
 	cout << last;
