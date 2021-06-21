@@ -13,7 +13,6 @@ queue<int> copyQ2;
 int prevBall, sameCnt = 1;
 int row , col;
 int dir[4][2] = { {-1,0},{1,0},{0,-1},{0,1} };
-int chDir[4][2] = { {0,-1},{0,1},{1,0},{-1,0} };
 int answer = 0;
 
 void move(int moveDir,int cnt,int mode) {
@@ -73,14 +72,7 @@ void throwIce() {
 	}
 
 }
-void printGraph() {
-	for (int i = 0; i < graph.size(); i++) {
-		for (int j = 0; j < graph.size(); j++) {
-			cout << graph[i][j] << ' ';
-		}
-		cout << '\n';
-	}
-}
+
 void clearQueue(queue<int> &q) {
 	queue<int> emptyQ;
 	swap(q, emptyQ);
