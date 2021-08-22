@@ -81,7 +81,7 @@ bool move() {
             for (int j = 0; j < board[it.row][it.col].size(); j++) {
                 if (board[it.row][it.col][j].first == i) {
                     int remove = board[it.row][it.col].size() - j;
-                    //움직였으니 갱신
+                   
                     int nextDir = board[it.row][it.col][j].second;
                     if (nextDir % 2 == 0) {
                         nextDir += 1;
@@ -99,7 +99,6 @@ bool move() {
                     if (cell[nextRow][nextCol] == 2) break;
 
                     for (int k = j; k < board[it.row][it.col].size(); k++) {
-                        //다음 칸도 파란색이라면 멈춤
                         if (cell[nextRow][nextCol] == 1) {
                             flag = true;
                             red_vec.push_back({ board[it.row][it.col][k].first,board[it.row][it.col][k].second });
