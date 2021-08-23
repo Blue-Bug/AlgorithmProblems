@@ -10,7 +10,7 @@ bool dfs(int cur,int parent,bool idx) {
 		int next = edges[cur][i];
 		if (next == parent) continue;
 		if (check[next] == check[cur]) {
-			//이미 방문했던 곳인데 그룹도 같다면 사이클
+			//이미 방문했던 곳인데 그룹도 같다면
 			return false;
 		}
 		if (check[next] != -1) {
@@ -47,7 +47,7 @@ int main() {
 				check[i] = 0;
 				//그래프를 돌면서 0과 1로 그룹을 나눔
 				if (!dfs(i, 0, 1)) {
-					//사이클이 생기면 이분 그래프를 만들수가 없다
+					//이분 그래프를 만들수가 없다
 					cout << "NO" << '\n';
 					break;
 				}
